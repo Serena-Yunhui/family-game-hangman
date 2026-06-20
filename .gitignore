@@ -1,0 +1,10 @@
+# Windows and editor clutter
+Thumbs.db
+Desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Local runtime output
+*.log
+node_modules/

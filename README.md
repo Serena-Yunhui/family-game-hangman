@@ -24,3 +24,12 @@ After the repository is on GitHub, enable Pages from the repository settings:
 3. Open **Pages**.
 4. Select the default branch and the repository root.
 5. Save, then open the published Pages link.
+
+## Push to GitHub
+
+If you create an empty GitHub repository first, connect this local project from the repository root:
+
+```powershell
+git remote add origin https://github.com/YOUR-USERNAME/family-hangman.git
+git push -u origin main
+```
