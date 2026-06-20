@@ -21,7 +21,9 @@ Open `index.html` in a browser.
 
 This project includes a GitHub Actions workflow at `.github/workflows/pages.yml` that uploads the repository root as a static GitHub Pages site whenever `main` is pushed.
 
-Before the workflow can deploy successfully, enable Pages for the repository and set the Pages source to GitHub Actions:
+Before the workflow can deploy successfully, Pages must be enabled for the repository and the Pages source must be set to GitHub Actions. The workflow now asks `actions/configure-pages` to enable Pages automatically when possible, but GitHub does not allow the default `GITHUB_TOKEN` to enable Pages for every repository.
+
+Recommended setup:
 
 1. Open the repository on GitHub.
 2. Go to **Settings**.
@@ -29,7 +31,13 @@ Before the workflow can deploy successfully, enable Pages for the repository and
 4. Under **Build and deployment**, set **Source** to **GitHub Actions**.
 5. Save, then re-run the failed workflow or push another commit to `main`.
 
-If `actions/configure-pages` reports `HttpError: Not Found` while calling the Pages REST API, Pages is usually not enabled yet or is still configured to deploy from a branch instead of GitHub Actions. Switching the source to GitHub Actions fixes that setup issue for this workflow.
+Optional automatic setup:
+
+1. Create a GitHub token that can administer the repository and write Pages settings.
+2. Add it as a repository secret named `PAGES_TOKEN`.
+3. Re-run the Pages workflow.
+
+If `actions/configure-pages` reports `HttpError: Not Found` while calling the Pages REST API, Pages is still not enabled for the repository or the workflow token cannot enable it. Use the recommended setup above, or provide `PAGES_TOKEN` so the workflow can enable Pages automatically.
 
 The workflow uses current GitHub-maintained action versions that run on Node.js 24, avoiding Node.js 20 deprecation warnings.
 
