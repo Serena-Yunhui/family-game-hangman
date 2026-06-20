@@ -21,6 +21,7 @@ Open `index.html` in a browser.
 
 This project includes a GitHub Actions workflow at `.github/workflows/pages.yml` that uploads the repository root as a static GitHub Pages site whenever `main` is pushed.
 
+Before the workflow can deploy successfully, Pages must be enabled for the repository and the Pages source must be set to GitHub Actions. The workflow asks `actions/configure-pages` to enable Pages when GitHub allows it, but the most reliable setup is to select the GitHub Actions source in repository settings.
 Before the workflow can deploy successfully, Pages must be enabled for the repository and the Pages source must be set to GitHub Actions. The workflow now asks `actions/configure-pages` to enable Pages automatically when possible, but GitHub does not allow the default `GITHUB_TOKEN` to enable Pages for every repository.
 
 Recommended setup:
@@ -31,6 +32,7 @@ Recommended setup:
 4. Under **Build and deployment**, set **Source** to **GitHub Actions**.
 5. Save, then re-run the failed workflow or push another commit to `main`.
 
+If `actions/configure-pages` reports `HttpError: Not Found` while calling the Pages REST API, Pages is still not enabled for the repository or the repository is not configured to build with GitHub Actions. Use the setup steps above, then re-run the workflow.
 Optional automatic setup:
 
 1. Create a GitHub token that can administer the repository and write Pages settings.
