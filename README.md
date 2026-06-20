@@ -6,11 +6,17 @@ A small, kid-friendly Hangman website for playing spelling games together.
 
 Open `index.html` in a browser.
 
+## Play Online
+
+Open the live GitHub Pages site:
+
+https://serena-yunhui.github.io/family-game-hangman/
+
 ## Features
 
 - Host prompt for a secret word with 5 or more letters.
 - Reminder for the guesser to close their eyes.
-- Optional online spelling check before play starts.
+- Optional online spelling check before play starts, with a suggested correction when one is found.
 - One-letter guessing with repeated guesses ignored.
 - Hangman drawing that grows after wrong guesses.
 - Optional 3 extra wrong guesses after the default 6-guess limit.
@@ -19,13 +25,9 @@ Open `index.html` in a browser.
 
 ## GitHub Pages
 
-After the repository is on GitHub, enable Pages from the repository settings:
+The site is published at:
 
-1. Open the repository on GitHub.
-2. Go to **Settings**.
-3. Open **Pages**.
-4. Select the default branch and the repository root.
-5. Save, then open the published Pages link.
+https://serena-yunhui.github.io/family-game-hangman/
 
 ## Push to GitHub
 

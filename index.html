@@ -28,12 +28,12 @@
           <form class="setup-form" id="wordForm">
             <label for="secretWord">Secret word</label>
             <div class="secret-row">
-              <input id="secretWord" name="secretWord" type="password" autocomplete="off" spellcheck="false" minlength="5" required>
-              <button class="icon-button" id="toggleWordButton" type="button" aria-label="Show secret word" title="Show secret word">
-                <span aria-hidden="true">&#128065;</span>
+              <input id="secretWord" name="secretWord" type="text" autocomplete="off" spellcheck="false" minlength="5" required>
+              <button class="icon-button eye-button" id="toggleWordButton" type="button" aria-label="Hide secret word" title="Hide secret word">
+                <span class="eye-icon eye-closed" id="visibilityIcon" aria-hidden="true"></span>
               </button>
             </div>
-            <p class="hint" id="setupHint">Letters only, at least 5 letters long.</p>
+            <p class="hint" id="setupHint">Letters only, at least 5 letters long. Tap the closed eye to hide the word.</p>
             <button class="primary-action" type="submit">Lock in word</button>
           </form>
         </section>
@@ -48,6 +48,7 @@
             <button class="primary-action" id="spellCheckButton" type="button">Check spelling</button>
           </div>
           <p class="hint" id="spellResult"></p>
+          <button class="secondary-action hidden" id="acceptSuggestionButton" type="button">Use suggested word</button>
           <button class="primary-action hidden" id="startGameButton" type="button">Start guessing</button>
         </section>
 
@@ -59,8 +60,13 @@
                 <path d="M58 239 L58 28 L170 28" class="gallows"></path>
                 <path d="M58 70 L100 28" class="brace"></path>
                 <line x1="170" y1="28" x2="170" y2="60" class="rope"></line>
+                <path d="M92 25 C112 8 141 8 160 25" class="rainbow rainbow-red"></path>
+                <path d="M99 25 C116 15 136 15 153 25" class="rainbow rainbow-blue"></path>
                 <circle cx="218" cy="44" r="16" class="sun"></circle>
+                <path d="M206 44 h-13 M243 44 h-13 M218 31 v-12 M218 69 v-12 M209 35 l-9 -9 M236 62 l-9 -9 M227 35 l9 -9 M200 62 l9 -9" class="sun-rays"></path>
                 <path d="M33 46 l5 10 l11 1 l-8 7 l2 11 l-10 -6 l-10 6 l2 -11 l-8 -7 l11 -1 z" class="star"></path>
+                <path d="M36 190 C52 178 73 178 89 190" class="cloud"></path>
+                <path d="M203 214 C218 202 237 203 248 216" class="cloud"></path>
                 <circle cx="170" cy="84" r="23" class="body-part" data-part="0"></circle>
                 <line x1="170" y1="107" x2="170" y2="166" class="body-part" data-part="1"></line>
                 <line x1="170" y1="122" x2="132" y2="151" class="body-part" data-part="2"></line>

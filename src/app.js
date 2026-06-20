@@ -10,9 +10,11 @@ const wordForm = document.querySelector("#wordForm");
 const secretWordInput = document.querySelector("#secretWord");
 const setupHint = document.querySelector("#setupHint");
 const toggleWordButton = document.querySelector("#toggleWordButton");
+const visibilityIcon = document.querySelector("#visibilityIcon");
 const skipSpellButton = document.querySelector("#skipSpellButton");
 const spellCheckButton = document.querySelector("#spellCheckButton");
 const spellResult = document.querySelector("#spellResult");
+const acceptSuggestionButton = document.querySelector("#acceptSuggestionButton");
 const startGameButton = document.querySelector("#startGameButton");
 const guessForm = document.querySelector("#guessForm");
 const letterInput = document.querySelector("#letterInput");
@@ -38,6 +40,7 @@ let revealedLetters = new Set();
 let guessed = new Map();
 let wrongGuesses = 0;
 let extraGuessesActive = false;
+let spellingSuggestion = "";
 
 function showStage(stageName) {
   Object.values(stages).forEach((stage) => stage.classList.remove("active"));
@@ -48,20 +51,34 @@ function cleanWord(value) {
   return value.trim().toLowerCase().replace(/[^a-z]/g, "");
 }
 
+function setSecretWordVisible(isVisible) {
+  secretWordInput.type = isVisible ? "text" : "password";
+  visibilityIcon.classList.toggle("eye-closed", isVisible);
+  toggleWordButton.setAttribute("aria-label", isVisible ? "Hide secret word" : "Show secret word");
+  toggleWordButton.setAttribute("title", isVisible ? "Hide secret word" : "Show secret word");
+}
+
+function resetSpellingCheck() {
+  spellingSuggestion = "";
+  spellResult.textContent = "";
+  acceptSuggestionButton.classList.add("hidden");
+  startGameButton.classList.add("hidden");
+}
+
 function resetGame() {
   secretWord = "";
   revealedLetters = new Set();
   guessed = new Map();
   wrongGuesses = 0;
   extraGuessesActive = false;
+  spellingSuggestion = "";
   secretWordInput.value = "";
-  secretWordInput.type = "password";
-  setupHint.textContent = "Letters only, at least 5 letters long.";
-  spellResult.textContent = "";
-  startGameButton.classList.add("hidden");
+  setSecretWordVisible(true);
+  setupHint.textContent = "Letters only, at least 5 letters long. Tap the closed eye to hide the word.";
+  resetSpellingCheck();
   letterInput.disabled = false;
   bodyParts.forEach((part) => part.classList.remove("visible"));
-  hangmanCard.classList.remove("shake", "glow");
+  hangmanCard.classList.remove("shake", "glow", "cheer");
   renderGame();
   showStage("setup");
   secretWordInput.focus();
@@ -104,16 +121,36 @@ function startGame() {
   letterInput.focus();
 }
 
+async function fetchSpellingSuggestion(word) {
+  const response = await fetch(`https://api.datamuse.com/words?sp=${encodeURIComponent(word)}&max=1`);
+  if (!response.ok) {
+    return "";
+  }
+
+  const matches = await response.json();
+  const bestMatch = matches[0]?.word ? cleanWord(matches[0].word) : "";
+  return bestMatch && bestMatch !== word ? bestMatch : "";
+}
+
 async function checkSpelling() {
   spellResult.textContent = "Checking...";
   spellCheckButton.disabled = true;
+  acceptSuggestionButton.classList.add("hidden");
+  spellingSuggestion = "";
 
   try {
     const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${secretWord}`);
     if (response.ok) {
       spellResult.textContent = `"${secretWord}" looks like a real word. Nice one.`;
     } else {
-      spellResult.textContent = `"${secretWord}" was not found. The host can still use it if it is a name or special word.`;
+      spellingSuggestion = await fetchSpellingSuggestion(secretWord);
+      if (spellingSuggestion) {
+        spellResult.textContent = `"${secretWord}" was not found as a real word. Do you mean "${spellingSuggestion}"?`;
+        acceptSuggestionButton.textContent = `Use "${spellingSuggestion}"`;
+        acceptSuggestionButton.classList.remove("hidden");
+      } else {
+        spellResult.textContent = `"${secretWord}" was not found as a real word. The host can still use it if it is a name or special word.`;
+      }
     }
   } catch {
     spellResult.textContent = "The spelling checker is offline right now. You can still start the game.";
@@ -143,6 +180,9 @@ function celebrate() {
       window.requestAnimationFrame(() => slot.classList.add("pop"));
     }
   });
+
+  hangmanCard.classList.add("cheer");
+  window.setTimeout(() => hangmanCard.classList.remove("cheer"), 940);
 }
 
 function endGame(won) {
@@ -220,19 +260,27 @@ wordForm.addEventListener("submit", (event) => {
   }
 
   secretWord = cleaned;
-  spellResult.textContent = "";
-  startGameButton.classList.add("hidden");
+  resetSpellingCheck();
   showStage("spell");
 });
 
 toggleWordButton.addEventListener("click", () => {
-  const isHidden = secretWordInput.type === "password";
-  secretWordInput.type = isHidden ? "text" : "password";
-  toggleWordButton.setAttribute("aria-label", isHidden ? "Hide secret word" : "Show secret word");
+  setSecretWordVisible(secretWordInput.type === "password");
 });
 
 skipSpellButton.addEventListener("click", startGame);
 spellCheckButton.addEventListener("click", checkSpelling);
+acceptSuggestionButton.addEventListener("click", () => {
+  if (!spellingSuggestion) {
+    return;
+  }
+
+  secretWord = spellingSuggestion;
+  secretWordInput.value = spellingSuggestion;
+  spellResult.textContent = `Using "${spellingSuggestion}" for this round.`;
+  acceptSuggestionButton.classList.add("hidden");
+  startGameButton.classList.remove("hidden");
+});
 startGameButton.addEventListener("click", startGame);
 
 guessForm.addEventListener("submit", (event) => {
