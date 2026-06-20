@@ -29,6 +29,21 @@ The site is published at:
 
 https://serena-yunhui.github.io/family-game-hangman/
 
+This project publishes with a branch-based GitHub Pages workflow at `.github/workflows/pages.yml`.
+
+The workflow does not call the GitHub Pages REST API or `actions/configure-pages`. Instead, it builds a small `_site` folder from `index.html`, `src/`, and optional `assets/`, then pushes that folder to a `gh-pages` branch.
+
+Set up Pages once in the repository settings:
+
+1. Open the repository on GitHub.
+2. Go to **Settings**.
+3. Open **Pages**.
+4. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
+5. Set **Branch** to `gh-pages` and the folder to `/ (root)`.
+6. Save, then re-run the workflow or push another commit to `main`.
+
+Because this workflow deploys by pushing a branch, it avoids the `actions/configure-pages` `HttpError: Not Found` failure that happens when the Pages API cannot find an enabled Pages site.
+
 ## Push to GitHub
 
 If you create an empty GitHub repository first, connect this local project from the repository root:
