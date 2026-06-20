@@ -19,13 +19,19 @@ Open `index.html` in a browser.
 
 ## GitHub Pages
 
-After the repository is on GitHub, enable Pages from the repository settings:
+This project includes a GitHub Actions workflow at `.github/workflows/pages.yml` that uploads the repository root as a static GitHub Pages site whenever `main` is pushed.
+
+Before the workflow can deploy successfully, enable Pages for the repository and set the Pages source to GitHub Actions:
 
 1. Open the repository on GitHub.
 2. Go to **Settings**.
 3. Open **Pages**.
-4. Select the default branch and the repository root.
-5. Save, then open the published Pages link.
+4. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+5. Save, then re-run the failed workflow or push another commit to `main`.
+
+If `actions/configure-pages` reports `HttpError: Not Found` while calling the Pages REST API, Pages is usually not enabled yet or is still configured to deploy from a branch instead of GitHub Actions. Switching the source to GitHub Actions fixes that setup issue for this workflow.
+
+The workflow uses current GitHub-maintained action versions that run on Node.js 24, avoiding Node.js 20 deprecation warnings.
 
 ## Push to GitHub
 
