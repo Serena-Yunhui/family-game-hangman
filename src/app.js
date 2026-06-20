@@ -6,11 +6,11 @@ const stages = {
   end: document.querySelector("#endStage")
 };
 
+const appShell = document.querySelector("#appShell");
 const wordForm = document.querySelector("#wordForm");
 const secretWordInput = document.querySelector("#secretWord");
 const setupHint = document.querySelector("#setupHint");
 const toggleWordButton = document.querySelector("#toggleWordButton");
-const visibilityIcon = document.querySelector("#visibilityIcon");
 const skipSpellButton = document.querySelector("#skipSpellButton");
 const spellCheckButton = document.querySelector("#spellCheckButton");
 const spellResult = document.querySelector("#spellResult");
@@ -27,6 +27,7 @@ const playAgainButton = document.querySelector("#playAgainButton");
 const restartButton = document.querySelector("#restartButton");
 const endTitle = document.querySelector("#endTitle");
 const endMessage = document.querySelector("#endMessage");
+const winCelebration = document.querySelector("#winCelebration");
 const extraYesButton = document.querySelector("#extraYesButton");
 const extraNoButton = document.querySelector("#extraNoButton");
 const bodyParts = [...document.querySelectorAll(".body-part")];
@@ -45,6 +46,8 @@ let spellingSuggestion = "";
 function showStage(stageName) {
   Object.values(stages).forEach((stage) => stage.classList.remove("active"));
   stages[stageName].classList.add("active");
+  appShell.classList.remove("host-mode", "guesser-mode", "end-mode");
+  appShell.classList.add(stageName === "setup" || stageName === "spell" ? "host-mode" : stageName === "end" ? "end-mode" : "guesser-mode");
 }
 
 function cleanWord(value) {
@@ -53,7 +56,7 @@ function cleanWord(value) {
 
 function setSecretWordVisible(isVisible) {
   secretWordInput.type = isVisible ? "text" : "password";
-  visibilityIcon.classList.toggle("eye-closed", isVisible);
+  toggleWordButton.classList.toggle("is-visible", isVisible);
   toggleWordButton.setAttribute("aria-label", isVisible ? "Hide secret word" : "Show secret word");
   toggleWordButton.setAttribute("title", isVisible ? "Hide secret word" : "Show secret word");
 }
@@ -74,7 +77,7 @@ function resetGame() {
   spellingSuggestion = "";
   secretWordInput.value = "";
   setSecretWordVisible(true);
-  setupHint.textContent = "Letters only, at least 5 letters long. Tap the closed eye to hide the word.";
+  setupHint.textContent = "Letters only, at least 5 letters long. Tap the closed eye to hide the word while typing.";
   resetSpellingCheck();
   letterInput.disabled = false;
   bodyParts.forEach((part) => part.classList.remove("visible"));
@@ -86,6 +89,7 @@ function resetGame() {
 
 function renderGame() {
   wordDisplay.innerHTML = "";
+  wordDisplay.style.setProperty("--letter-count", Math.max(secretWord.length, 1));
   [...secretWord].forEach((letter) => {
     const slot = document.createElement("span");
     slot.className = "letter-slot";
@@ -188,6 +192,7 @@ function celebrate() {
 function endGame(won) {
   letterInput.disabled = true;
   showStage("end");
+  winCelebration.classList.toggle("hidden", !won);
   endTitle.textContent = won ? "You saved the day!" : "Good try!";
   endMessage.textContent = won
     ? `The word was "${secretWord}". Brilliant guessing.`
