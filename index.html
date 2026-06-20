@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Family Hangman</title>
+    <link rel="stylesheet" href="src/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="game-panel" aria-live="polite">
+        <div class="top-bar">
+          <div>
+            <p class="eyebrow">Family Hangman</p>
+            <h1>Secret Word Challenge</h1>
+          </div>
+          <button class="icon-button" id="restartButton" type="button" aria-label="Start over" title="Start over">
+            <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+
+        <section class="stage active" id="setupStage">
+          <div class="notice">
+            <h2>Host turn</h2>
+            <p>Choose a secret word with 5 or more letters. Guesser, close your eyes!</p>
+          </div>
+
+          <form class="setup-form" id="wordForm">
+            <label for="secretWord">Secret word</label>
+            <div class="secret-row">
+              <input id="secretWord" name="secretWord" type="password" autocomplete="off" spellcheck="false" minlength="5" required>
+              <button class="icon-button" id="toggleWordButton" type="button" aria-label="Show secret word" title="Show secret word">
+                <span aria-hidden="true">👁</span>
+              </button>
+            </div>
+            <p class="hint" id="setupHint">Letters only, at least 5 letters long.</p>
+            <button class="primary-action" type="submit">Lock in word</button>
+          </form>
+        </section>
+
+        <section class="stage" id="spellStage">
+          <div class="notice">
+            <h2>Spelling check?</h2>
+            <p>The host can check the spelling before the guessing starts.</p>
+          </div>
+          <div class="action-row">
+            <button class="secondary-action" id="skipSpellButton" type="button">Skip check</button>
+            <button class="primary-action" id="spellCheckButton" type="button">Check spelling</button>
+          </div>
+          <p class="hint" id="spellResult"></p>
+          <button class="primary-action hidden" id="startGameButton" type="button">Start guessing</button>
+        </section>
+
+        <section class="stage" id="playStage">
+          <div class="play-layout">
+            <div class="hangman-card">
+              <svg class="hangman" viewBox="0 0 240 260" role="img" aria-label="Hangman drawing">
+                <line x1="35" y1="235" x2="205" y2="235" class="gallows"></line>
+                <line x1="65" y1="235" x2="65" y2="25" class="gallows"></line>
+                <line x1="65" y1="25" x2="165" y2="25" class="gallows"></line>
+                <line x1="165" y1="25" x2="165" y2="58" class="gallows"></line>
+                <circle cx="165" cy="78" r="20" class="body-part" data-part="0"></circle>
+                <line x1="165" y1="98" x2="165" y2="155" class="body-part" data-part="1"></line>
+                <line x1="165" y1="112" x2="130" y2="138" class="body-part" data-part="2"></line>
+                <line x1="165" y1="112" x2="200" y2="138" class="body-part" data-part="3"></line>
+                <line x1="165" y1="155" x2="135" y2="200" class="body-part" data-part="4"></line>
+                <line x1="165" y1="155" x2="195" y2="200" class="body-part" data-part="5"></line>
+              </svg>
+              <p class="mistakes" id="mistakeCount">0 wrong guesses</p>
+            </div>
+
+            <div class="guess-panel">
+              <p class="status-text" id="statusText">Guess a letter.</p>
+              <div class="word-display" id="wordDisplay" aria-label="Secret word"></div>
+              <form class="guess-form" id="guessForm">
+                <label for="letterInput">Letter guess</label>
+                <div class="guess-row">
+                  <input id="letterInput" name="letterInput" type="text" maxlength="1" autocomplete="off" inputmode="text">
+                  <button class="primary-action" type="submit">Guess</button>
+                </div>
+              </form>
+              <div>
+                <p class="mini-label">Guessed letters</p>
+                <div class="guessed-list" id="guessedLetters"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="stage" id="endStage">
+          <div class="notice">
+            <h2 id="endTitle">Great game!</h2>
+            <p id="endMessage"></p>
+          </div>
+          <button class="primary-action" id="playAgainButton" type="button">Play again</button>
+        </section>
+      </section>
+
+      <div class="sparkle-layer" id="sparkleLayer" aria-hidden="true"></div>
+    </main>
+
+    <script src="src/app.js"></script>
+  </body>
+</html>
