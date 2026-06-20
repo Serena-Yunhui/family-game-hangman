@@ -1,4 +1,4 @@
-name: Deploy static site to Pages
+name: Publish static site to gh-pages
 
 on:
   push:
@@ -7,32 +7,60 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: gh-pages
+  cancel-in-progress: true
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/checkout@v5
         with:
-          path: .
+          fetch-depth: 0
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Prepare static site
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir _site
+          cp index.html _site/
+          cp -R src _site/src
+          if [ -d assets ]; then
+            cp -R assets _site/assets
+          fi
+          touch _site/.nojekyll
+
+      - name: Publish to gh-pages branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          worktree="$RUNNER_TEMP/gh-pages-worktree"
+          rm -rf "$worktree"
+
+          git fetch origin gh-pages || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git worktree add "$worktree" origin/gh-pages
+            cd "$worktree"
+            git switch -c gh-pages || git switch gh-pages
+          else
+            git worktree add "$worktree" --detach
+            cd "$worktree"
+            git switch --orphan gh-pages
+          fi
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$GITHUB_WORKSPACE/_site/." .
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No site changes to publish."
+          else
+            git commit -m "Deploy static site"
+            git push origin HEAD:gh-pages
+          fi
