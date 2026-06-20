@@ -11,6 +11,7 @@
   --gold: #ffc857;
   --teal: #2ec4b6;
   --blue: #3772ff;
+  --purple: #845ec2;
   --shadow: 0 18px 55px rgba(36, 48, 63, 0.14);
 }
 
@@ -232,24 +233,75 @@ button:disabled {
   display: block;
 }
 
+.ground {
+  fill: #8bd17c;
+  stroke: #56a84c;
+  stroke-width: 3;
+}
+
+.sun {
+  fill: var(--gold);
+  opacity: 0.88;
+}
+
+.star {
+  fill: #ffd66b;
+  stroke: #e7aa18;
+  stroke-width: 2;
+}
+
 .gallows,
+.brace,
+.rope,
 .body-part {
   fill: none;
   stroke: var(--ink);
   stroke-width: 10;
   stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brace {
+  stroke-width: 7;
+  opacity: 0.82;
+}
+
+.rope {
+  stroke: #a66b3f;
+  stroke-width: 6;
 }
 
 .body-part {
   opacity: 0;
-  transform: scale(0.92);
+  transform: translateY(-10px) scale(0.86) rotate(-4deg);
   transform-origin: center;
-  transition: opacity 220ms ease, transform 220ms ease;
+  transition:
+    opacity 520ms ease,
+    transform 620ms cubic-bezier(0.2, 1.3, 0.35, 1);
 }
 
 .body-part.visible {
   opacity: 1;
-  transform: scale(1);
+  transform: translateY(0) scale(1) rotate(0);
+  animation: body-arrive 680ms ease;
+}
+
+.face-detail {
+  stroke: var(--coral);
+  stroke-width: 5;
+  fill: none;
+}
+
+.face-dot {
+  fill: var(--coral);
+}
+
+.face-detail.visible {
+  animation: face-arrive 760ms ease;
+}
+
+.hangman-card.glow {
+  animation: glow-card 720ms ease;
 }
 
 .mistakes {
@@ -284,7 +336,7 @@ button:disabled {
 }
 
 .letter-slot.pop {
-  animation: pop 420ms ease;
+  animation: pop 780ms cubic-bezier(0.2, 1, 0.28, 1);
 }
 
 .guessed-list {
@@ -329,7 +381,7 @@ button:disabled {
   height: 14px;
   border-radius: 3px;
   background: var(--gold);
-  animation: sparkle 900ms ease-out forwards;
+  animation: sparkle 1450ms cubic-bezier(0.12, 0.75, 0.22, 1) forwards;
 }
 
 .shake {
@@ -338,10 +390,13 @@ button:disabled {
 
 @keyframes pop {
   0% {
-    transform: translateY(12px) scale(0.8);
+    transform: translateY(14px) scale(0.82);
   }
-  60% {
-    transform: translateY(-8px) scale(1.14);
+  45% {
+    transform: translateY(-10px) scale(1.16);
+  }
+  72% {
+    transform: translateY(2px) scale(0.98);
   }
   100% {
     transform: translateY(0) scale(1);
@@ -355,7 +410,44 @@ button:disabled {
   }
   100% {
     opacity: 0;
-    transform: translate(var(--dx), var(--dy)) rotate(180deg) scale(0.4);
+    transform: translate(var(--dx), var(--dy)) rotate(320deg) scale(0.35);
+  }
+}
+
+@keyframes body-arrive {
+  0% {
+    filter: drop-shadow(0 0 0 rgba(55, 114, 255, 0));
+  }
+  45% {
+    filter: drop-shadow(0 0 14px rgba(55, 114, 255, 0.38));
+  }
+  100% {
+    filter: drop-shadow(0 0 0 rgba(55, 114, 255, 0));
+  }
+}
+
+@keyframes face-arrive {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.22);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes glow-card {
+  0%,
+  100% {
+    box-shadow: none;
+  }
+  45% {
+    box-shadow: 0 0 0 8px rgba(255, 200, 87, 0.28);
   }
 }
 

@@ -2,6 +2,7 @@ const stages = {
   setup: document.querySelector("#setupStage"),
   spell: document.querySelector("#spellStage"),
   play: document.querySelector("#playStage"),
+  extra: document.querySelector("#extraStage"),
   end: document.querySelector("#endStage")
 };
 
@@ -24,13 +25,19 @@ const playAgainButton = document.querySelector("#playAgainButton");
 const restartButton = document.querySelector("#restartButton");
 const endTitle = document.querySelector("#endTitle");
 const endMessage = document.querySelector("#endMessage");
+const extraYesButton = document.querySelector("#extraYesButton");
+const extraNoButton = document.querySelector("#extraNoButton");
 const bodyParts = [...document.querySelectorAll(".body-part")];
+const hangmanCard = document.querySelector(".hangman-card");
 
-const maxWrongGuesses = bodyParts.length;
+const defaultWrongGuessLimit = 6;
+const extraWrongGuesses = 3;
+const maxWrongGuesses = defaultWrongGuessLimit + extraWrongGuesses;
 let secretWord = "";
 let revealedLetters = new Set();
 let guessed = new Map();
 let wrongGuesses = 0;
+let extraGuessesActive = false;
 
 function showStage(stageName) {
   Object.values(stages).forEach((stage) => stage.classList.remove("active"));
@@ -46,6 +53,7 @@ function resetGame() {
   revealedLetters = new Set();
   guessed = new Map();
   wrongGuesses = 0;
+  extraGuessesActive = false;
   secretWordInput.value = "";
   secretWordInput.type = "password";
   setupHint.textContent = "Letters only, at least 5 letters long.";
@@ -53,6 +61,7 @@ function resetGame() {
   startGameButton.classList.add("hidden");
   letterInput.disabled = false;
   bodyParts.forEach((part) => part.classList.remove("visible"));
+  hangmanCard.classList.remove("shake", "glow");
   renderGame();
   showStage("setup");
   secretWordInput.focus();
@@ -80,13 +89,15 @@ function renderGame() {
   });
 
   const guessText = wrongGuesses === 1 ? "1 wrong guess" : `${wrongGuesses} wrong guesses`;
-  mistakeCount.textContent = `${guessText} of ${maxWrongGuesses}`;
+  const currentLimit = extraGuessesActive ? maxWrongGuesses : defaultWrongGuessLimit;
+  mistakeCount.textContent = `${guessText} of ${currentLimit}`;
 }
 
 function startGame() {
   revealedLetters = new Set();
   guessed = new Map();
   wrongGuesses = 0;
+  extraGuessesActive = false;
   statusText.textContent = "Guess a letter.";
   renderGame();
   showStage("play");
@@ -123,7 +134,7 @@ function celebrate() {
     sparkle.style.setProperty("--dx", `${(Math.random() - 0.5) * 360}px`);
     sparkle.style.setProperty("--dy", `${-80 - Math.random() * 220}px`);
     sparkleLayer.append(sparkle);
-    window.setTimeout(() => sparkle.remove(), 950);
+    window.setTimeout(() => sparkle.remove(), 1500);
   }
 
   [...wordDisplay.children].forEach((slot) => {
@@ -141,6 +152,21 @@ function endGame(won) {
   endMessage.textContent = won
     ? `The word was "${secretWord}". Brilliant guessing.`
     : `The word was "${secretWord}". Time for another round.`;
+}
+
+function askForExtraGuesses() {
+  letterInput.disabled = true;
+  statusText.textContent = "You reached 6 wrong guesses.";
+  showStage("extra");
+}
+
+function continueWithExtraGuesses() {
+  extraGuessesActive = true;
+  letterInput.disabled = false;
+  statusText.textContent = "You have 3 extra guesses. Look for a helpful letter!";
+  renderGame();
+  showStage("play");
+  letterInput.focus();
 }
 
 function handleGuess(value) {
@@ -169,13 +195,15 @@ function handleGuess(value) {
     wrongGuesses += 1;
     statusText.textContent = `${letter.toUpperCase()} is not in the word.`;
     renderGame();
-    document.querySelector(".hangman-card").classList.add("shake");
-    window.setTimeout(() => document.querySelector(".hangman-card").classList.remove("shake"), 380);
+    hangmanCard.classList.add("shake", "glow");
+    window.setTimeout(() => hangmanCard.classList.remove("shake", "glow"), 760);
   }
 
   const allRevealed = [...secretWord].every((letterInWord) => revealedLetters.has(letterInWord));
   if (allRevealed) {
     window.setTimeout(() => endGame(true), 650);
+  } else if (wrongGuesses >= defaultWrongGuessLimit && !extraGuessesActive) {
+    window.setTimeout(askForExtraGuesses, 500);
   } else if (wrongGuesses >= maxWrongGuesses) {
     window.setTimeout(() => endGame(false), 450);
   }
@@ -218,5 +246,7 @@ letterInput.addEventListener("input", () => {
 
 playAgainButton.addEventListener("click", resetGame);
 restartButton.addEventListener("click", resetGame);
+extraYesButton.addEventListener("click", continueWithExtraGuesses);
+extraNoButton.addEventListener("click", () => endGame(false));
 
 resetGame();

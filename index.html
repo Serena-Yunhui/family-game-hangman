@@ -15,7 +15,7 @@
             <h1>Secret Word Challenge</h1>
           </div>
           <button class="icon-button" id="restartButton" type="button" aria-label="Start over" title="Start over">
-            <span aria-hidden="true">↻</span>
+            <span aria-hidden="true">&#8635;</span>
           </button>
         </div>
 
@@ -30,7 +30,7 @@
             <div class="secret-row">
               <input id="secretWord" name="secretWord" type="password" autocomplete="off" spellcheck="false" minlength="5" required>
               <button class="icon-button" id="toggleWordButton" type="button" aria-label="Show secret word" title="Show secret word">
-                <span aria-hidden="true">👁</span>
+                <span aria-hidden="true">&#128065;</span>
               </button>
             </div>
             <p class="hint" id="setupHint">Letters only, at least 5 letters long.</p>
@@ -54,17 +54,22 @@
         <section class="stage" id="playStage">
           <div class="play-layout">
             <div class="hangman-card">
-              <svg class="hangman" viewBox="0 0 240 260" role="img" aria-label="Hangman drawing">
-                <line x1="35" y1="235" x2="205" y2="235" class="gallows"></line>
-                <line x1="65" y1="235" x2="65" y2="25" class="gallows"></line>
-                <line x1="65" y1="25" x2="165" y2="25" class="gallows"></line>
-                <line x1="165" y1="25" x2="165" y2="58" class="gallows"></line>
-                <circle cx="165" cy="78" r="20" class="body-part" data-part="0"></circle>
-                <line x1="165" y1="98" x2="165" y2="155" class="body-part" data-part="1"></line>
-                <line x1="165" y1="112" x2="130" y2="138" class="body-part" data-part="2"></line>
-                <line x1="165" y1="112" x2="200" y2="138" class="body-part" data-part="3"></line>
-                <line x1="165" y1="155" x2="135" y2="200" class="body-part" data-part="4"></line>
-                <line x1="165" y1="155" x2="195" y2="200" class="body-part" data-part="5"></line>
+              <svg class="hangman" viewBox="0 0 260 280" role="img" aria-label="Hangman drawing">
+                <rect x="18" y="238" width="210" height="18" rx="9" class="ground"></rect>
+                <path d="M58 239 L58 28 L170 28" class="gallows"></path>
+                <path d="M58 70 L100 28" class="brace"></path>
+                <line x1="170" y1="28" x2="170" y2="60" class="rope"></line>
+                <circle cx="218" cy="44" r="16" class="sun"></circle>
+                <path d="M33 46 l5 10 l11 1 l-8 7 l2 11 l-10 -6 l-10 6 l2 -11 l-8 -7 l11 -1 z" class="star"></path>
+                <circle cx="170" cy="84" r="23" class="body-part" data-part="0"></circle>
+                <line x1="170" y1="107" x2="170" y2="166" class="body-part" data-part="1"></line>
+                <line x1="170" y1="122" x2="132" y2="151" class="body-part" data-part="2"></line>
+                <line x1="170" y1="122" x2="208" y2="151" class="body-part" data-part="3"></line>
+                <line x1="170" y1="166" x2="139" y2="213" class="body-part" data-part="4"></line>
+                <line x1="170" y1="166" x2="201" y2="213" class="body-part" data-part="5"></line>
+                <circle cx="161" cy="79" r="2.8" class="body-part face-detail face-dot" data-part="6"></circle>
+                <circle cx="179" cy="79" r="2.8" class="body-part face-detail face-dot" data-part="7"></circle>
+                <path d="M158 98 Q170 90 182 98" class="body-part face-detail" data-part="8"></path>
               </svg>
               <p class="mistakes" id="mistakeCount">0 wrong guesses</p>
             </div>
@@ -84,6 +89,17 @@
                 <div class="guessed-list" id="guessedLetters"></div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section class="stage" id="extraStage">
+          <div class="notice">
+            <h2>Do you want more guesses?</h2>
+            <p>You have used 6 wrong guesses. You can take 3 extra tries, and the hangman will get a silly sad face.</p>
+          </div>
+          <div class="action-row">
+            <button class="primary-action" id="extraYesButton" type="button">Yes, 3 more</button>
+            <button class="secondary-action" id="extraNoButton" type="button">No, show the word</button>
           </div>
         </section>
 
