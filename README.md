@@ -37,7 +37,7 @@ Optional automatic setup:
 2. Add it as a repository secret named `PAGES_TOKEN`.
 3. Re-run the Pages workflow.
 
-If `actions/configure-pages` reports `HttpError: Not Found` while calling the Pages REST API, Pages is still not enabled for the repository or the workflow token cannot enable it. Use the recommended setup above, or provide `PAGES_TOKEN` so the workflow can enable Pages automatically.
+If `actions/configure-pages` reports  while calling the Pages REST API, Pages is still not enabled for the repository or the workflow token cannot enable it. Use the recommended setup above, or provide `PAGES_TOKEN` so the workflow can enable Pages automatically.
 
 The workflow uses current GitHub-maintained action versions that run on Node.js 24, avoiding Node.js 20 deprecation warnings.
 
