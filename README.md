@@ -13,7 +13,9 @@ Open `index.html` in a browser.
 - Optional online spelling check before play starts.
 - One-letter guessing with repeated guesses ignored.
 - Hangman drawing that grows after wrong guesses.
-- Sparkle effects when the guesser finds a correct letter.
+- Optional 3 extra wrong guesses after the default 6-guess limit.
+- Sad-face drawing pieces for the extra guesses.
+- Slower sparkle and letter-pop effects when the guesser finds a correct letter.
 
 ## GitHub Pages
 
