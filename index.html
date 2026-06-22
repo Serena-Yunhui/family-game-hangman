@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="src/styles.css">
   </head>
   <body>
+    <div class="top-strip">Neon word game for brave guessers</div>
     <main class="app-shell host-mode" id="appShell">
       <section class="game-panel" aria-live="polite">
         <div class="top-bar">
           <div>
-            <p class="eyebrow">Family Hangman</p>
+            <p class="eyebrow">{ Family Hangman }</p>
             <h1>Secret Word Challenge</h1>
           </div>
           <button class="icon-button" id="restartButton" type="button" aria-label="Start over" title="Start over">
@@ -21,6 +22,7 @@
 
         <section class="stage active" id="setupStage">
           <div class="notice">
+            <p class="stage-tag">{ Host setup }</p>
             <h2>Host turn</h2>
             <p>Choose a secret word with 5 or more letters.<br>Guessers, close your eyes!</p>
           </div>
@@ -49,6 +51,7 @@
 
         <section class="stage" id="spellStage">
           <div class="notice">
+            <p class="stage-tag">{ Spelling check }</p>
             <h2>Spelling check?</h2>
             <p>The host can check the spelling before the guessing starts.</p>
           </div>
@@ -109,6 +112,7 @@
 
         <section class="stage" id="extraStage">
           <div class="notice">
+            <p class="stage-tag">{ Bonus round }</p>
             <h2>Do you want more guesses?</h2>
             <p>You have used 6 wrong guesses. You can take 3 extra tries, and the hangman will get a silly sad face.</p>
           </div>
@@ -127,6 +131,7 @@
             <span class="party-ribbon ribbon-two"></span>
           </div>
           <div class="notice">
+            <p class="stage-tag">{ Final reveal }</p>
             <h2 id="endTitle">Great game!</h2>
             <p id="endMessage"></p>
           </div>
